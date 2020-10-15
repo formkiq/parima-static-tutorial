@@ -13,6 +13,25 @@
             img {
                max-width: 50%; 
             }
+            .hide {
+                display:none;
+            }
+            .outputs {
+                width: 320px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .outputs table {
+                width: 100%;
+            }
+            .outputs th {
+                font-weight: bold;
+                text-align: center;
+            }
+            .outputs td {
+                text-align: center;
+                padding-bottom: 8px;
+            }
         </style>
     </head>
     <body>
@@ -20,5 +39,28 @@
         <br />
         <h1>Placeholder Website</h1>
         <p>Website Coming Soon</p>
+        
+        <div class="outputs" style="{{STYLE_GIT_AUTH}}">
+            <h2>Git Repository is Private</h2>
+            <p>For Parima to deploy a private git repository, you need to authenticate Parima with your repository.</p>
+            <p>Click <a href="{{GIT_AUTH_URL}}">here</a> to authenticate Parima.</p>
+        </div>
+
+        <div class="outputs" style="{{STYLE_GIT_WEBHOOK}}">
+            <h2>Git Hook Required</h2>
+            <p>For Parima to be able to automatically deploy the website when a change is committed. Please add the following url as a "WebHook" to your Git repository.</p>
+            <p>{{ WebHookUrl }}</p>
+        </div>
+
+        <div class="outputs">
+            <table>
+                <tr><th>Git Repository</th></tr>
+                <tr><td>{{ GithubRepoUrl }}</td></tr>
+                <tr><th>Use the <a href="https://aws.amazon.com/cli/">AWS Command Line Interface</a> to deploy local website to AWS.</th></tr>
+                <tr><td>{{ SyncCommand }}</td></tr>
+                <tr><th><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html">Clear Cloudfront Cache</a></th></tr>
+                <tr><td>{{ InvalidateCache }}</td></tr>
+            </table>
+        </div>
     </body>
 </html>
