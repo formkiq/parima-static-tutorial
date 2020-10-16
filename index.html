@@ -114,43 +114,60 @@
             <p>Could take 3-5 minutes</p>
         </div>
 
-        <div class="outputs" style="">
+        <div class="outputs">
             <h2>Git Repository is Private</h2>
             <h4>For Parima to deploy a private git repository, you need to authenticate Parima with your repository.</h4>
-            <p>Click <a href="https://oauth.formkiq.com/authorize?redirect_uri=1seg2sbke6.execute-api.us-west-2.amazonaws.com/webhook">here</a> to authenticate Parima.</p>
+            <p>Click <a href="{{GIT_AUTH_URL}}">here</a> to authenticate Parima.</p>
         </div>
 
-        <div class="outputs" style="">
+        <div class="outputs">
             <h2>Git Hook Required</h2>
             <h4>For Parima to be able to automatically deploy the website when a change is committed. Please add the following url as a "WebHook" to your Git repository.</h4>
-            <p>https://1seg2sbke6.execute-api.us-west-2.amazonaws.com/webhook</p>
+            <p>{{ WebHookUrl }}</p>
         </div>
 
         <div class="outputs">
             <table>
                 <tr><th>Git Repository</th></tr>
-                <tr><td>https://github.com/formkiq/blog.formkiq.com.git</td></tr>
+                <tr><td>{{ GithubRepoUrl }}</td></tr>
                 <tr><th>Use the <a href="https://aws.amazon.com/cli/">AWS Command Line Interface</a> to deploy local website to AWS.</th></tr>
-                <tr><td>aws s3 sync . s3://parima-s3bucket-1uc10tr6qmfw0/v1</td></tr>
+                <tr><td>{{ SyncCommand }}</td></tr>
             </table>
         </div>
     </body>
     <script>
         window.onload = () => {
-            const q = window.location.search;
-            if (!q.includes("welcome")) {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 15000);
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4) {
+                if (this.status == 200) {
+                    refresh();
+                } else {
+                    document.querySelectorAll('.refresh')[0].style.display = 'none';
+                }
+              }
+            };
+
+            function status() {
+                xhttp.open("GET", "https://{{ WebHookUrl }}?hasaccess", true);
+                xhttp.send();
             }
-            if (q.includes("welcome")) {
-                document.querySelectorAll('.refresh')[0].style.display = 'none';
-            } else {
+        
+            var statusCheck = setInterval(() => {status();}, 15000);
+            status();
+
+            function refresh() {
+                clearInterval(statusCheck);
+                document.querySelectorAll('.refresh')[0].style.display = 'block';
                 let divs = document.querySelectorAll('.outputs');
                 for (i = 0; i < divs.length; ++i) {
                     divs[i].style.display = 'none';
                 }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 15000);
             }
+            document.querySelectorAll('.refresh')[0].style.display = 'none';
         }
     </script>
 </html>
