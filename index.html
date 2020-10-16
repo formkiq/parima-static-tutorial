@@ -13,13 +13,17 @@
             img {
                max-width: 50%; 
             }
+            .refresh {
+               margin-bottom:50px;
+            }
             .hide {
                 display:none;
             }
             .outputs {
-                width: 320px;
+                width: 100%;
                 margin-left: auto;
                 margin-right: auto;
+                margin-bottom:40px;
             }
             .outputs table {
                 width: 100%;
@@ -94,45 +98,59 @@
     <body>
         <img src="parima.png" alt="Parima: Website Launcher"/>
         <br />
-        <h1>Placeholder Website</h1>
-        <p>Website Coming Soon</p>
-        <div>
-            <div class="lds-ellipsis">
-                <div class="bg-green"></div>
-                <div class="bg-green"></div>
-                <div class="bg-green"></div>
-                <div class="bg-green"></div>
+        <h1 style="margin-bottom:50px;">Placeholder Website</h1>
+
+        <div class="refresh">
+            <h3>Your Website is Deploying... </h3>
+            <div>
+                <div class="lds-ellipsis">
+                    <div class="bg-green"></div>
+                    <div class="bg-green"></div>
+                    <div class="bg-green"></div>
+                    <div class="bg-green"></div>
+                </div>
             </div>
+            <p>This page will automatically load your site once CloudFront has completed deploying.</p>
+            <p>Could take 3-5 minutes</p>
         </div>
-        <p>Note: this page will automatically load your site once it's available.</p>
 
-        
-        <div class="outputs" style="{{STYLE_GIT_AUTH}}">
+        <div class="outputs" style="">
             <h2>Git Repository is Private</h2>
-            <p>For Parima to deploy a private git repository, you need to authenticate Parima with your repository.</p>
-            <p>Click <a href="{{GIT_AUTH_URL}}">here</a> to authenticate Parima.</p>
+            <h4>For Parima to deploy a private git repository, you need to authenticate Parima with your repository.</h4>
+            <p>Click <a href="https://oauth.formkiq.com/authorize?redirect_uri=1seg2sbke6.execute-api.us-west-2.amazonaws.com/webhook">here</a> to authenticate Parima.</p>
         </div>
 
-        <div class="outputs" style="{{STYLE_GIT_WEBHOOK}}">
+        <div class="outputs" style="">
             <h2>Git Hook Required</h2>
-            <p>For Parima to be able to automatically deploy the website when a change is committed. Please add the following url as a "WebHook" to your Git repository.</p>
-            <p>{{ WebHookUrl }}</p>
+            <h4>For Parima to be able to automatically deploy the website when a change is committed. Please add the following url as a "WebHook" to your Git repository.</h4>
+            <p>https://1seg2sbke6.execute-api.us-west-2.amazonaws.com/webhook</p>
         </div>
 
         <div class="outputs">
             <table>
                 <tr><th>Git Repository</th></tr>
-                <tr><td>{{ GithubRepoUrl }}</td></tr>
+                <tr><td>https://github.com/formkiq/blog.formkiq.com.git</td></tr>
                 <tr><th>Use the <a href="https://aws.amazon.com/cli/">AWS Command Line Interface</a> to deploy local website to AWS.</th></tr>
-                <tr><td>{{ SyncCommand }}</td></tr>
+                <tr><td>aws s3 sync . s3://parima-s3bucket-1uc10tr6qmfw0/v1</td></tr>
             </table>
         </div>
     </body>
     <script>
         window.onload = () => {
-            setTimeout(() => {
-                window.location.reload();
-            }, 15000);
+            const q = window.location.search;
+            if (q.includes("refresh")) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 15000);
+            }
+            if (!q.includes("refresh")) {
+                document.querySelectorAll('.refresh')[0].style.display = 'none';
+            } else {
+                let divs = document.querySelectorAll('.outputs');
+                for (i = 0; i < divs.length; ++i) {
+                    divs[i].style.display = 'none';
+                }
+            }
         }
     </script>
 </html>
