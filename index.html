@@ -138,12 +138,12 @@
     <script>
         window.onload = () => {
             const q = window.location.search;
-            if (q.includes("refresh")) {
+            if (!q.includes("welcome")) {
                 setTimeout(() => {
                     window.location.reload();
                 }, 15000);
             }
-            if (!q.includes("refresh")) {
+            if (q.includes("welcome")) {
                 document.querySelectorAll('.refresh')[0].style.display = 'none';
             } else {
                 let divs = document.querySelectorAll('.outputs');
