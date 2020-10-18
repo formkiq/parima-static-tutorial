@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Parima Placeholder Website</title>
+        <base href="/">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                text-align: center;
+            }
+            img {
+               max-width: 50%; 
+            }
+            .refresh {
+               margin-bottom:50px;
+            }
+            .hide {
+                display:none;
+            }
+            .outputs {
+                width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom:40px;
+            }
+            .outputs table {
+                width: 100%;
+            }
+            .outputs th {
+                font-weight: bold;
+                text-align: center;
+            }
+            .outputs td {
+                text-align: center;
+                padding-bottom: 8px;
+            }
+            .bg-green {
+                background-color: #33FF33;
+            }
+            .lds-ellipsis {
+                display: inline-block;
+                position: relative;
+                width: 80px;
+                height: 40px;
+            }
+            .lds-ellipsis div {
+                position: absolute;
+                top: 16px;
+                width: 13px;
+                height: 13px;
+                border-radius: 50%;
+                animation-timing-function: cubic-bezier(0, 1, 1, 0);
+            }
+            .lds-ellipsis div:nth-child(1) {
+                left: 8px;
+                animation: lds-ellipsis1 0.6s infinite;
+            }
+            .lds-ellipsis div:nth-child(2) {
+                left: 8px;
+                animation: lds-ellipsis2 0.6s infinite;
+            }
+            .lds-ellipsis div:nth-child(3) {
+                left: 32px;
+                animation: lds-ellipsis2 0.6s infinite;
+            }
+            .lds-ellipsis div:nth-child(4) {
+                left: 56px;
+                animation: lds-ellipsis3 0.6s infinite;
+            }
+            @keyframes lds-ellipsis1 {
+                0% {
+                    transform: scale(0);
+                }
+                100% {
+                    transform: scale(1);
+                }
+                }
+                @keyframes lds-ellipsis3 {
+                0% {
+                    transform: scale(1);
+                }
+                100% {
+                    transform: scale(0);
+                }
+                }
+                @keyframes lds-ellipsis2 {
+                0% {
+                    transform: translate(0, 0);
+                }
+                100% {
+                    transform: translate(24px, 0);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <img src="parima.png" alt="Parima: Website Launcher"/>
+        <br />
+        <h1 style="margin-bottom:50px;">Placeholder Website</h1>
+
+        <div class="refresh">
+            <h3>Your Website is Deploying... </h3>
+            <div>
+                <div class="lds-ellipsis">
+                    <div class="bg-green"></div>
+                    <div class="bg-green"></div>
+                    <div class="bg-green"></div>
+                    <div class="bg-green"></div>
+                </div>
+            </div>
+            <p>This page will automatically load your site once CloudFront has completed deploying.</p>
+            <p>Could take 3-5 minutes</p>
+        </div>
+
+        <div class="outputs">
+            <h2>Git Repository is Private</h2>
+            <h4>For Parima to deploy a private git repository, you need to authenticate Parima with your repository.</h4>
+            <p>Click <a href="{{GIT_AUTH_URL}}">here</a> to authenticate Parima.</p>
+        </div>
+
+        <div class="outputs">
+            <h2>Git Hook Required</h2>
+            <h4>For Parima to be able to automatically deploy the website when a change is committed. Please add the following url as a "WebHook" to your Git repository.</h4>
+            <p>{{WebHookUrl}}</p>
+        </div>
+
+        <div class="outputs">
+            <table>
+                <tr><th>Git Repository</th></tr>
+                <tr><td>{{GithubRepoUrl}}</td></tr>
+            </table>
+        </div>
+    </body>
+    <script>
+        window.onload = () => {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4) {
+                if (this.status == 200) {
+                    refresh();
+                } else {
+                    document.querySelectorAll('.refresh')[0].style.display = 'none';
+                }
+              }
+            };
+
+            function status() {
+                xhttp.open("GET", "{{ WebHookUrl }}?hasaccess", true);
+                xhttp.send();
+            }
+        
+            var statusCheck = setInterval(() => {status();}, 15000);
+            status();
+
+            function refresh() {
+                clearInterval(statusCheck);
+                document.querySelectorAll('.refresh')[0].style.display = 'block';
+                let divs = document.querySelectorAll('.outputs');
+                for (i = 0; i < divs.length; ++i) {
+                    divs[i].style.display = 'none';
+                }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 15000);
+            }
+            document.querySelectorAll('.refresh')[0].style.display = 'none';
+        }
+    </script>
+</html>
