@@ -100,74 +100,11 @@
         <br />
         <h1 style="margin-bottom:50px;">Placeholder Website</h1>
 
-        <div class="refresh">
-            <h3>Your Website is Deploying... </h3>
-            <div>
-                <div class="lds-ellipsis">
-                    <div class="bg-green"></div>
-                    <div class="bg-green"></div>
-                    <div class="bg-green"></div>
-                    <div class="bg-green"></div>
-                </div>
-            </div>
-            <p>This page will automatically load your site once CloudFront has completed deploying.</p>
-            <p>Could take 3-5 minutes</p>
-        </div>
-
-        <div class="outputs">
-            <h2>Git Repository is Private</h2>
-            <h4>For Parima to deploy a private git repository, you need to authenticate Parima with your repository.</h4>
-            <p>Click <a href="{{GIT_AUTH_URL}}">here</a> to authenticate Parima.</p>
-        </div>
-
-        <div class="outputs">
-            <h2>Git Hook Required</h2>
-            <h4>For Parima to be able to automatically deploy the website when a change is committed. Please add the following url as a "WebHook" to your Git repository.</h4>
-            <p>{{ WebHookUrl }}</p>
-        </div>
-
         <div class="outputs">
             <table>
-                <tr><th>Git Repository</th></tr>
-                <tr><td>{{ GithubRepoUrl }}</td></tr>
                 <tr><th>Use the <a href="https://aws.amazon.com/cli/">AWS Command Line Interface</a> to deploy local website to AWS.</th></tr>
-                <tr><td>{{ SyncCommand }}</td></tr>
+                <tr><td>{{SyncCommand}}</td></tr>
             </table>
         </div>
     </body>
-    <script>
-        window.onload = () => {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-              if (this.readyState == 4) {
-                if (this.status == 200) {
-                    refresh();
-                } else {
-                    document.querySelectorAll('.refresh')[0].style.display = 'none';
-                }
-              }
-            };
-
-            function status() {
-                xhttp.open("GET", "{{ WebHookUrl }}?hasaccess", true);
-                xhttp.send();
-            }
-        
-            var statusCheck = setInterval(() => {status();}, 15000);
-            status();
-
-            function refresh() {
-                clearInterval(statusCheck);
-                document.querySelectorAll('.refresh')[0].style.display = 'block';
-                let divs = document.querySelectorAll('.outputs');
-                for (i = 0; i < divs.length; ++i) {
-                    divs[i].style.display = 'none';
-                }
-                setTimeout(() => {
-                    window.location.reload();
-                }, 15000);
-            }
-            document.querySelectorAll('.refresh')[0].style.display = 'none';
-        }
-    </script>
 </html>
